@@ -1,0 +1,99 @@
+2025-07-15 10:23:41,740 - narrative_matrix - INFO - Generated new objective: Discover legal related to institutions
+2025-07-15 10:23:41,741 - narrative_matrix - INFO - Added specific target: John Doe
+2025-07-15 10:23:41,743 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:23:41,744 - narrative_matrix - INFO - Added specific target: CryptoProject X
+2025-07-15 10:23:41,751 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:23:41,754 - narrative_matrix - INFO - Logged narrative-worthy discovery to /home/computeruse/.anthropic/narrahunt_phase2/results/narratives/20250715_102341_legal.json
+2025-07-15 10:23:41,754 - narrative_matrix - INFO - Added artifact type: repository
+2025-07-15 10:23:41,757 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:23:41,758 - narrative_matrix - INFO - Added artifact type: social_media
+2025-07-15 10:23:41,765 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:23:41,765 - narrative_matrix - INFO - Generated 0 follow-up objectives
+2025-07-15 10:23:41,772 - objectives_manager - WARNING - Crawler module not found. Running in limited mode.
+2025-07-15 10:23:41,774 - objectives_manager - WARNING - LLM integration module not found. Running in limited mode.
+2025-07-15 10:23:41,776 - objectives_manager - INFO - Loaded existing objective: Discover legal related to institutions
+2025-07-15 10:23:41,776 - narrative_matrix - ERROR - No active objective to mark complete
+2025-07-15 10:23:41,777 - objectives_manager - INFO - Marked objective as complete: Discover legal related to institutions
+2025-07-15 10:23:41,779 - objectives_manager - INFO - Loaded existing objective: Discover legal related to institutions
+2025-07-15 10:23:41,779 - objectives_manager - INFO - Starting autonomous cycle with max_cycles=1
+2025-07-15 10:23:41,780 - objectives_manager - INFO - Starting cycle 1/1
+2025-07-15 10:23:41,782 - objectives_manager - INFO - Loaded existing objective: Discover legal related to institutions
+2025-07-15 10:23:41,782 - objectives_manager - INFO - Working on objective: Discover legal related to institutions
+2025-07-15 10:23:41,782 - objectives_manager - INFO - Parsed objective - Artifact type: legal, Entity: to institutions
+2025-07-15 10:23:41,783 - objectives_manager - INFO - Found 0 discoveries for this objective
+2025-07-15 10:23:41,783 - objectives_manager - INFO - Completed autonomous cycle
+2025-07-15 10:25:09,109 - objectives_manager - WARNING - Crawler module not found. Running in limited mode.
+2025-07-15 10:25:09,109 - objectives_manager - WARNING - LLM integration module not found. Running in limited mode.
+2025-07-15 10:25:09,110 - narrahunt.integration - INFO - Starting integrated cycle with max_cycles=2
+2025-07-15 10:25:09,110 - narrahunt.integration - INFO - Starting cycle 1/2
+2025-07-15 10:25:09,112 - objectives_manager - INFO - Loaded existing objective: Discover legal related to institutions
+2025-07-15 10:25:09,113 - narrahunt.integration - INFO - Working on objective: Discover legal related to institutions
+2025-07-15 10:25:09,113 - narrahunt.integration - INFO - Parsed objective - Artifact type: legal, Entity: to institutions
+2025-07-15 10:25:09,113 - narrahunt.integration - WARNING - Crawler components not available. Skipping crawl phase.
+2025-07-15 10:25:14,113 - narrative_matrix - ERROR - No active objective to mark complete
+2025-07-15 10:25:14,114 - objectives_manager - INFO - Marked objective as complete: Discover legal related to institutions
+2025-07-15 10:25:14,116 - objectives_manager - INFO - Loaded existing objective: Discover legal related to institutions
+2025-07-15 10:25:14,116 - narrahunt.integration - INFO - Moved to next objective: Discover legal related to institutions
+2025-07-15 10:25:14,117 - narrahunt.integration - INFO - Waiting 30 seconds before next cycle
+2025-07-15 10:25:44,115 - narrahunt.integration - INFO - Starting cycle 2/2
+2025-07-15 10:25:44,118 - objectives_manager - INFO - Loaded existing objective: Discover legal related to institutions
+2025-07-15 10:25:44,118 - narrahunt.integration - INFO - Working on objective: Discover legal related to institutions
+2025-07-15 10:25:44,118 - narrahunt.integration - INFO - Parsed objective - Artifact type: legal, Entity: to institutions
+2025-07-15 10:25:44,118 - narrahunt.integration - WARNING - Crawler components not available. Skipping crawl phase.
+2025-07-15 10:25:49,119 - narrative_matrix - ERROR - No active objective to mark complete
+2025-07-15 10:25:49,119 - objectives_manager - INFO - Marked objective as complete: Discover legal related to institutions
+2025-07-15 10:25:49,122 - objectives_manager - INFO - Loaded existing objective: Discover legal related to institutions
+2025-07-15 10:25:49,122 - narrahunt.integration - INFO - Moved to next objective: Discover legal related to institutions
+2025-07-15 10:25:49,122 - narrahunt.integration - INFO - Completed integrated cycle
+2025-07-15 10:25:57,155 - narrative_matrix - INFO - Generated new objective: Discover social_media related to crypto devs
+2025-07-15 10:32:29,638 - objectives_manager - WARNING - Crawler module not found. Running in limited mode.
+2025-07-15 10:32:29,638 - objectives_manager - WARNING - LLM integration module not found. Running in limited mode.
+2025-07-15 10:32:29,639 - ethereum_test - INFO - Starting Ethereum name test with max_time=30m, min_discoveries=3
+2025-07-15 10:32:29,639 - narrative_matrix - INFO - Added specific target: Vitalik Buterin
+2025-07-15 10:32:29,640 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:32:29,642 - ethereum_test - INFO - Set objective: Find name around Vitalik Buterin
+2025-07-15 10:32:29,642 - ethereum_test - WARNING - Crawler not available, can't add sources
+2025-07-15 10:32:29,642 - ethereum_test - WARNING - Crawler not available, adding simulated discoveries for testing
+2025-07-15 10:32:29,645 - ethereum_test - INFO - Saved 3 discoveries to /home/computeruse/.anthropic/narrahunt_phase2/results/narratives/name_artifacts/summary.json
+2025-07-15 10:32:29,661 - ethereum_test - INFO - Test completed in 0.0 minutes
+2025-07-15 10:32:29,661 - ethereum_test - INFO - Processed 0 URLs
+2025-07-15 10:32:29,661 - ethereum_test - INFO - Found 3 name artifacts
+2025-07-15 10:35:41,808 - objectives_manager - WARNING - Crawler module not found. Running in limited mode.
+2025-07-15 10:35:41,809 - objectives_manager - WARNING - LLM integration module not found. Running in limited mode.
+2025-07-15 10:35:41,811 - enhanced_integration - INFO - Starting name-focused objective for entity: Vitalik Buterin
+2025-07-15 10:35:41,813 - enhanced_integration - INFO - Set objective: Find name around Vitalik Buterin
+2025-07-15 10:35:41,820 - enhanced_integration - INFO - Recorded 0 name artifacts for Vitalik Buterin
+2025-07-15 10:35:41,824 - narrative_matrix - INFO - Marked objective as completed and archived to /home/computeruse/.anthropic/narrahunt_phase2/results/completed_objectives/20250715_103541_completed.json
+2025-07-15 10:35:41,826 - enhanced_integration - INFO - Completed name-focused objective for Vitalik Buterin
+2025-07-15 10:35:55,528 - objectives_manager - WARNING - Crawler module not found. Running in limited mode.
+2025-07-15 10:35:55,529 - objectives_manager - WARNING - LLM integration module not found. Running in limited mode.
+2025-07-15 10:35:55,532 - enhanced_integration - INFO - Starting name-focused objective for entity: Vitalik Buterin
+2025-07-15 10:35:55,534 - enhanced_integration - INFO - Set objective: Find name around Vitalik Buterin
+2025-07-15 10:35:55,545 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:35:55,548 - narrative_matrix - INFO - Logged narrative-worthy discovery to /home/computeruse/.anthropic/narrahunt_phase2/results/narratives/20250715_103555_name.json
+2025-07-15 10:35:55,550 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:35:55,557 - narrative_matrix - INFO - Logged narrative-worthy discovery to /home/computeruse/.anthropic/narrahunt_phase2/results/narratives/20250715_103555_name.json
+2025-07-15 10:35:55,559 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:35:55,564 - narrative_matrix - INFO - Logged narrative-worthy discovery to /home/computeruse/.anthropic/narrahunt_phase2/results/narratives/20250715_103555_name.json
+2025-07-15 10:35:55,567 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:35:55,571 - narrative_matrix - INFO - Logged narrative-worthy discovery to /home/computeruse/.anthropic/narrahunt_phase2/results/narratives/20250715_103555_name.json
+2025-07-15 10:35:55,573 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:35:55,577 - narrative_matrix - INFO - Logged narrative-worthy discovery to /home/computeruse/.anthropic/narrahunt_phase2/results/narratives/20250715_103555_name.json
+2025-07-15 10:35:55,580 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 10:35:55,583 - narrative_matrix - INFO - Logged narrative-worthy discovery to /home/computeruse/.anthropic/narrahunt_phase2/results/narratives/20250715_103555_name.json
+2025-07-15 10:35:55,584 - enhanced_integration - INFO - Recorded 6 name artifacts for Vitalik Buterin
+2025-07-15 10:35:55,612 - narrative_matrix - INFO - Marked objective as completed and archived to /home/computeruse/.anthropic/narrahunt_phase2/results/completed_objectives/20250715_103555_completed.json
+2025-07-15 10:35:55,615 - enhanced_integration - INFO - Completed name-focused objective for Vitalik Buterin
+2025-07-15 11:42:28,688 - enhanced_artifact_detector - INFO - Name artifact extractor is available
+2025-07-15 11:42:28,706 - objectives_manager - WARNING - Crawler module not found. Running in limited mode.
+2025-07-15 11:42:28,706 - objectives_manager - WARNING - LLM integration module not found. Running in limited mode.
+2025-07-15 11:42:28,711 - enhanced_artifact_detector - INFO - Registered extractor for artifact type: default
+2025-07-15 11:42:28,711 - enhanced_artifact_detector - INFO - Registered extractor for artifact type: name
+2025-07-15 11:42:29,238 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 11:42:29,238 - narrative_matrix - INFO - Added specific target: Ethereum Foundation
+2025-07-15 11:42:29,240 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 11:42:29,240 - narrative_matrix - INFO - Added specific target: Gavin Wood
+2025-07-15 11:42:29,247 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 11:42:31,251 - narrative_matrix - WARNING - Cannot generate follow-ups: No active objective or discoveries
+2025-07-15 11:42:31,251 - objectives_manager - INFO - No related objectives generated
+2025-07-15 11:42:31,267 - narrahunt.integrated_main - INFO - Discovery summary saved to /home/computeruse/.anthropic/narrahunt_phase2/results/session_summaries/2025-07-15-11-42.txt and appended to discovery log

@@ -1,0 +1,10 @@
+2025-07-15 10:25:06,147 - autonomous_runner - INFO - Starting autonomous mode with parameters: cycles=1, delay=5s, continuous=False
+2025-07-15 10:25:06,155 - objectives_manager - WARNING - Crawler module not found. Running in limited mode.
+2025-07-15 10:25:06,156 - objectives_manager - WARNING - LLM integration module not found. Running in limited mode.
+2025-07-15 10:25:06,156 - objectives_manager - INFO - Starting autonomous cycle with max_cycles=1
+2025-07-15 10:25:06,157 - objectives_manager - INFO - Starting cycle 1/1
+2025-07-15 10:25:06,160 - objectives_manager - INFO - Loaded existing objective: Discover legal related to institutions
+2025-07-15 10:25:06,161 - objectives_manager - INFO - Working on objective: Discover legal related to institutions
+2025-07-15 10:25:06,161 - objectives_manager - INFO - Parsed objective - Artifact type: legal, Entity: to institutions
+2025-07-15 10:25:06,161 - objectives_manager - INFO - Found 0 discoveries for this objective
+2025-07-15 10:25:06,161 - objectives_manager - INFO - Completed autonomous cycle

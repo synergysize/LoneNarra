@@ -1,0 +1,121 @@
+2025-07-15 13:55:05,648 - real_objective - INFO - Running objective: Find name artifacts around Vitalik Buterin
+2025-07-15 13:55:05,648 - real_objective - INFO - Max URLs: 5, Max time: 5 minutes
+2025-07-15 13:55:05,655 - llm_integration - INFO - LLM Integration initialized. Using Claude: True, Using OpenAI: False
+2025-07-15 13:55:05,660 - crawler - INFO - Crawler initialized
+2025-07-15 13:55:05,660 - real_objective - INFO - Parsed objective - Artifact type: name, Entity: Vitalik Buterin
+2025-07-15 13:55:05,675 - llm_integration - INFO - LLM Integration initialized. Using Claude: True, Using OpenAI: False
+2025-07-15 13:55:05,676 - llm_research_strategy - INFO - Using real LLM integration with Claude API
+2025-07-15 13:55:12,584 - llm_integration - INFO - Successfully received response from Claude
+2025-07-15 13:55:12,585 - crawler - INFO - Processing URL: https://duckduckgo.com/html/?q=Vitalik+Buterin+old+blog (depth: 0)
+2025-07-15 13:55:12,751 - crawler - INFO - Skipping URL disallowed by robots.txt: https://duckduckgo.com/html/?q=Vitalik+Buterin+old+blog
+2025-07-15 13:55:12,752 - crawler - INFO - Processing URL: https://github.com/search?q=Vitalik+Buterin+old+blog&type=code (depth: 0)
+2025-07-15 13:55:12,977 - narrahunt.fetch - INFO - Fetching https://github.com/search?q=Vitalik+Buterin+old+blog&type=code
+2025-07-15 13:55:13,327 - narrahunt.fetch - INFO - Successfully fetched https://github.com/search?q=Vitalik+Buterin+old+blog&type=code (164711 bytes)
+2025-07-15 13:55:13,328 - crawler - INFO - Extracting artifacts from https://github.com/search?q=Vitalik+Buterin+old+blog&type=code
+2025-07-15 13:55:13,329 - narrahunt.artifact_extractor - INFO - Extracting artifacts from URL: https://github.com/search?q=Vitalik+Buterin+old+blog&type=code
+2025-07-15 13:55:13,375 - narrahunt.artifact_extractor - WARNING - No artifacts found in https://github.com/search?q=Vitalik+Buterin+old+blog&type=code
+2025-07-15 13:55:13,376 - crawler - INFO - Found 0 artifacts (0 high-scoring) on https://github.com/search?q=Vitalik+Buterin+old+blog&type=code
+2025-07-15 13:55:15,606 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,608 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,610 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,612 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,614 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,615 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,617 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,619 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,621 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,623 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,624 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,626 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,628 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,630 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,632 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,634 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,635 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,638 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,639 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,641 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,643 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,644 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,646 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,647 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,649 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,650 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,652 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,654 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,656 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,658 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,661 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,663 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,664 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,666 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,668 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,669 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,672 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,674 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,676 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,678 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,679 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,681 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,682 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,684 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,686 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,690 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:15,690 - crawler - INFO - Processing URL: https://duckduckgo.com/html/?q=sources (depth: 0)
+2025-07-15 13:55:15,804 - crawler - INFO - Skipping URL disallowed by robots.txt: https://duckduckgo.com/html/?q=sources
+2025-07-15 13:55:15,805 - crawler - INFO - Processing URL: https://duckduckgo.com/html/?q=Vitalik+Buterin+early+forum+posts (depth: 0)
+2025-07-15 13:55:15,919 - crawler - INFO - Skipping URL disallowed by robots.txt: https://duckduckgo.com/html/?q=Vitalik+Buterin+early+forum+posts
+2025-07-15 13:55:15,920 - crawler - INFO - Processing URL: https://github.com/search?q=Vitalik+Buterin+previously+known+as&type=code (depth: 0)
+2025-07-15 13:55:16,102 - narrahunt.fetch - INFO - Fetching https://github.com/search?q=Vitalik+Buterin+previously+known+as&type=code
+2025-07-15 13:55:16,475 - narrahunt.fetch - INFO - Successfully fetched https://github.com/search?q=Vitalik+Buterin+previously+known+as&type=code (164917 bytes)
+2025-07-15 13:55:16,476 - crawler - INFO - Extracting artifacts from https://github.com/search?q=Vitalik+Buterin+previously+known+as&type=code
+2025-07-15 13:55:16,476 - narrahunt.artifact_extractor - INFO - Extracting artifacts from URL: https://github.com/search?q=Vitalik+Buterin+previously+known+as&type=code
+2025-07-15 13:55:16,524 - narrahunt.artifact_extractor - WARNING - No artifacts found in https://github.com/search?q=Vitalik+Buterin+previously+known+as&type=code
+2025-07-15 13:55:16,524 - crawler - INFO - Found 0 artifacts (0 high-scoring) on https://github.com/search?q=Vitalik+Buterin+previously+known+as&type=code
+2025-07-15 13:55:18,760 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,762 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,765 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,766 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,768 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,770 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,772 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,773 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,775 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,777 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,778 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,780 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,781 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,783 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,784 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,786 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,788 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,790 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,791 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,793 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,794 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,796 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,797 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,799 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,801 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,802 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,804 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,806 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,808 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,809 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,811 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,812 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,814 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,815 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,817 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,819 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,821 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,823 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,824 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,826 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,828 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,829 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,831 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,833 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,834 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,836 - narrative_matrix - INFO - Configuration saved successfully.
+2025-07-15 13:55:18,844 - narrative_matrix - INFO - Marked objective as completed and archived to /home/computeruse/.anthropic/narrahunt_phase2/results/completed_objectives/20250715_135518_completed.json
