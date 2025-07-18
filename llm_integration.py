@@ -12,6 +12,8 @@ import logging
 import requests
 import time
 from typing import Dict, Any, List, Optional, Union
+from dotenv import load_dotenv
+from config_loader import get_api_key
 
 # Configure logging
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -27,9 +29,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger('llm_integration')
 
-# LLM API Keys
-CLAUDE_API_KEY = "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"
-OPENAI_API_KEY = "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"
+# Load environment variables
+load_dotenv()
+
+# LLM API Keys loaded from environment
+CLAUDE_API_KEY = get_api_key('CLAUDE_API_KEY')
+OPENAI_API_KEY = get_api_key('OPENAI_API_KEY')
 
 class LLMIntegration:
     """
@@ -43,6 +48,9 @@ class LLMIntegration:
         Args:
             use_claude: Whether to use Claude as the LLM
             use_openai: Whether to use OpenAI as the LLM
+            
+        Raises:
+            ValueError: If the selected LLM service API key is not available
         """
         self.use_claude = use_claude
         self.use_openai = use_openai
@@ -54,6 +62,13 @@ class LLMIntegration:
         # Initialize API keys
         self.claude_api_key = CLAUDE_API_KEY
         self.openai_api_key = OPENAI_API_KEY
+        
+        # Validate that we have the necessary API keys
+        if self.use_claude and not self.claude_api_key:
+            raise ValueError("Claude API key not found. Please add CLAUDE_API_KEY to your .env file.")
+        
+        if self.use_openai and not self.openai_api_key:
+            raise ValueError("OpenAI API key not found. Please add OPENAI_API_KEY to your .env file.")
         
         # Cache for API responses
         self.response_cache = {}

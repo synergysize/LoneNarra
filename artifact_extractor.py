@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 # Base directory
-base_dir = '/home/computeruse/.anthropic/narrahunt_phase2'
+base_dir = os.path.dirname(__file__)
 
 # Ensure output directories exist
 os.makedirs(f'{base_dir}/results/artifacts', exist_ok=True)
@@ -64,29 +64,19 @@ WARNING_PHRASES = [
     'for testing'
 ]
 
-# BIP39 word list (abbreviated for testing)
-BIP39_WORDS = {
-    'abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 
-    'absurd', 'abuse', 'access', 'accident', 'account', 'accuse', 'achieve', 'acid', 
-    'acoustic', 'acquire', 'across', 'act', 'action', 'actor', 'actress', 'actual', 
-    'adapt', 'add', 'addict', 'address', 'adjust', 'admit', 'adult', 'advance', 
-    'advice', 'aerobic', 'affair', 'afford', 'afraid', 'again', 'age', 'agent', 
-    'agree', 'ahead', 'aim', 'air', 'airport', 'aisle', 'alarm', 'album', 
-    'alcohol', 'alert', 'alien', 'all', 'alley', 'allow', 'almost', 'alone', 
-    'alpha', 'already', 'also', 'alter', 'always', 'amateur', 'amazing', 'among', 
-    'amount', 'amused', 'analyst', 'anchor', 'ancient', 'anger', 'angle', 'angry', 
-    'animal', 'ankle', 'announce', 'annual', 'another', 'answer', 'antenna', 'antique', 
-    'anxiety', 'any', 'apart', 'apology', 'appear', 'apple', 'approve', 'april', 
-    'arch', 'arctic', 'area', 'arena', 'argue', 'arm', 'armed', 'armor', 
-    'army', 'around', 'arrange', 'arrest', 'arrive', 'arrow', 'art', 'artefact', 
-    'artist', 'artwork', 'ask', 'aspect', 'assault', 'asset', 'assist', 'assume', 
-    'asthma', 'athlete', 'atom', 'attack', 'attend', 'attitude', 'attract', 'auction', 
-    'audit', 'august', 'aunt', 'author', 'auto', 'autumn', 'average', 'avocado', 
-    'avoid', 'awake', 'aware', 'away', 'awesome', 'awful', 'awkward', 'axis',
-    'wrong', 'yellow', 'zebra', 'zoo'
-}
+# BIP39 word list
+logger.info("Loading BIP39 wordlist from file")
+wordlist_path = f'{base_dir}/config/wordlists/bip39.txt'
+try:
+    with open(wordlist_path, 'r') as f:
+        BIP39_WORDS = set(word.strip() for word in f.readlines())
+    logger.info(f"Loaded {len(BIP39_WORDS)} BIP39 words")
+except Exception as e:
+    logger.error(f"Error loading BIP39 wordlist: {str(e)}")
+    # Fallback to empty set if file can't be loaded
+    BIP39_WORDS = set()
 
-def extract_artifacts_from_html(html_content, url="https://example.com", date=None):
+def extract_artifacts_from_html(html_content, url="", date=None):
     """
     Extract Ethereum artifacts from HTML content.
     
@@ -105,26 +95,17 @@ def extract_artifacts_from_html(html_content, url="https://example.com", date=No
         logger.warning(f"No HTML content to parse for URL: {url}")
         return []
     
-    # Add content length to debug log
+    # Validate content
     content_length = len(html_content) if html_content else 0
-    logger.debug(f"Content length: {content_length} bytes for URL: {url}")
     
     # Check for extremely small content
     if content_length < 100:
         logger.warning(f"Content too small ({content_length} bytes) for URL: {url}")
-        if content_length > 0:
-            logger.debug(f"Content preview: {html_content}")
         return []
-    
-    # Log content preview for debugging
-    if content_length > 0:
-        preview = html_content[:500] + "..." if content_length > 500 else html_content
-        logger.debug(f"Content preview: {preview}")
     
     # Parse HTML
     try:
         soup = BeautifulSoup(html_content, 'html.parser')
-        logger.debug(f"Successfully parsed HTML for URL: {url}")
     except Exception as e:
         logger.error(f"Error parsing HTML from {url}: {str(e)}")
         return []
@@ -135,41 +116,33 @@ def extract_artifacts_from_html(html_content, url="https://example.com", date=No
     # Track artifact hashes to avoid duplicates
     artifact_hashes = set()
     
-    # Process different artifact types with debugging
+    # Process different artifact types
     solidity_artifacts = extract_solidity_contracts(soup, url, date, artifact_hashes)
-    logger.debug(f"Found {len(solidity_artifacts)} Solidity contracts")
     artifacts.extend(solidity_artifacts)
     
     wallet_artifacts = extract_wallet_addresses(soup, url, date, artifact_hashes)
-    logger.debug(f"Found {len(wallet_artifacts)} wallet addresses")
     artifacts.extend(wallet_artifacts)
     
     private_key_artifacts = extract_private_keys(soup, url, date, artifact_hashes)
-    logger.debug(f"Found {len(private_key_artifacts)} private keys")
     artifacts.extend(private_key_artifacts)
     
     keystore_artifacts = extract_json_keystores(soup, url, date, artifact_hashes)
-    logger.debug(f"Found {len(keystore_artifacts)} JSON keystores")
     artifacts.extend(keystore_artifacts)
     
     seed_artifacts = extract_seed_phrases(soup, url, date, artifact_hashes)
-    logger.debug(f"Found {len(seed_artifacts)} seed phrases")
     artifacts.extend(seed_artifacts)
     
     api_artifacts = extract_api_keys(soup, url, date, artifact_hashes)
-    logger.debug(f"Found {len(api_artifacts)} API keys")
     artifacts.extend(api_artifacts)
     
     # Store high-scoring artifacts
     store_artifacts(artifacts)
     
-    # Log detailed results
+    # Log summary of results
     if artifacts:
         logger.info(f"Extracted {len(artifacts)} artifacts from {url}")
-        for i, artifact in enumerate(artifacts):
-            logger.debug(f"Artifact {i+1}: Type={artifact.get('type', 'unknown')}, Score={artifact.get('score', 0)}")
     else:
-        logger.warning(f"No artifacts found in {url}")
+        logger.info(f"No artifacts found in {url}")
     
     return artifacts
 
@@ -349,35 +322,66 @@ def extract_json_keystores(soup, url, date, artifact_hashes):
                 # Try to parse as JSON
                 start_idx = code_text.find('{')
                 end_idx = code_text.rfind('}') + 1
-                if start_idx >= 0 and end_idx > start_idx:
-                    json_text = code_text[start_idx:end_idx]
-                    json_obj = json.loads(json_text)
+                
+                if start_idx < 0 or end_idx <= start_idx:
+                    continue
                     
-                    # Verify it's a v3 keystore
-                    if 'version' in json_obj and json_obj['version'] == 3:
-                        # Check for duplicates
-                        artifact_hash = generate_hash(json_text)
-                        if artifact_hash in artifact_hashes:
-                            continue
-                        
-                        artifact_hashes.add(artifact_hash)
-                        
-                        # Score and create artifact
-                        score = score_artifact(url, json_text, date)
-                        
-                        # Redact for summary
-                        artifacts.append({
-                            'type': 'ethereum_keystore',
-                            'content': json_text,  # Full content stored for processing
-                            'summary': f"[JSON keystore redacted] - v3 keystore for address 0x{json_obj.get('address', '')}",
-                            'location': f"Code block #{i+1}",
-                            'hash': artifact_hash,
-                            'score': score,
-                            'url': url,
-                            'date': date
-                        })
+                json_text = code_text[start_idx:end_idx]
+                
+                # Validate JSON format before parsing
+                if not ('{' in json_text and '}' in json_text):
+                    continue
+                    
+                try:
+                    json_obj = json.loads(json_text)
+                except json.JSONDecodeError:
+                    # Try to clean up the JSON string and retry
+                    json_text = re.sub(r'\\n', '', json_text)
+                    json_text = re.sub(r'\\r', '', json_text)
+                    json_text = re.sub(r'\\t', '', json_text)
+                    json_text = re.sub(r'//.*?\\n', '', json_text)
+                    try:
+                        json_obj = json.loads(json_text)
+                    except:
+                        continue
+                
+                # Verify it's a v3 keystore by checking required fields
+                if not ('version' in json_obj and json_obj.get('version') == 3 and
+                       'crypto' in json_obj and isinstance(json_obj.get('crypto'), dict)):
+                    continue
+                
+                crypto = json_obj.get('crypto', {})
+                if not all(key in crypto for key in ['cipher', 'ciphertext', 'kdf', 'mac']):
+                    continue
+                
+                # Check for duplicates
+                artifact_hash = generate_hash(json_text)
+                if artifact_hash in artifact_hashes:
+                    continue
+                
+                artifact_hashes.add(artifact_hash)
+                
+                # Score and create artifact
+                score = score_artifact(url, json_text, date)
+                
+                # Get address safely
+                address = json_obj.get('address', '')
+                if address and not address.startswith('0x'):
+                    address = '0x' + address
+                
+                # Redact for summary
+                artifacts.append({
+                    'type': 'ethereum_keystore',
+                    'content': json_text,  # Full content stored for processing
+                    'summary': f"[JSON keystore redacted] - v3 keystore for address {address}",
+                    'location': f"Code block #{i+1}",
+                    'hash': artifact_hash,
+                    'score': score,
+                    'url': url,
+                    'date': date
+                })
             except Exception as e:
-                logger.debug(f"Error parsing potential JSON keystore: {str(e)}")
+                logger.warning(f"Error processing potential JSON keystore: {str(e)}")
     
     return artifacts
 
@@ -591,20 +595,86 @@ def score_artifact(url, content, date):
     if any(warning in content_lower for warning in WARNING_PHRASES):
         score -= 10
     
-    # +2 for syntactically valid artifacts (would add validation logic here)
-    # This is simplified for the example
-    if len(content) > 20:
+    # +2 for syntactically valid artifacts
+    # Check for specific artifact validity based on type
+    if 'contract ' in content_lower and '{' in content and '}' in content:
+        # Likely a valid Solidity contract
         score += 2
+    elif re.match(r'^0x[0-9a-f]{40}$', content_lower):
+        # Valid Ethereum address format
+        score += 2
+    elif re.match(r'^0x[0-9a-f]{64}$', content_lower) or re.match(r'^[0-9a-f]{64}$', content_lower):
+        # Valid private key format
+        score += 3
+    elif re.match(r'^(?:\w+\s){11,23}\w+$', content_lower) and len(content.split()) in [12, 15, 18, 21, 24]:
+        # Potentially valid seed phrase format
+        score += 2
+    elif re.match(r'^[A-Za-z0-9]{32,}$', content):
+        # Potentially valid API key
+        score += 1
     
     return score
 
 def find_location(soup, text):
-    """Find location of text in the HTML."""
-    # Simplified location finding
-    for i, tag in enumerate(soup.find_all(['pre', 'code', 'p'])):
-        if text in tag.get_text():
-            tag_type = tag.name
-            return f"{tag_type} #{i+1}"
+    """Find location of text in the HTML with contextual information."""
+    # Check for the text in various elements with specific handling
+    
+    # First try to find exact matches with their parent context
+    for element_type in ['pre', 'code', 'p', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a']:
+        elements = soup.find_all(element_type)
+        for i, element in enumerate(elements):
+            if text in element.get_text():
+                # Try to get parent context for better location info
+                parent = element.parent
+                parent_id = parent.get('id', '')
+                parent_class = ' '.join(parent.get('class', []))
+                
+                location = f"{element_type}#{i+1}"
+                
+                # Add additional context if available
+                if parent_id:
+                    location += f" in div#{parent_id}"
+                elif parent_class:
+                    location += f" in div.{parent_class}"
+                
+                # Try to get section heading
+                heading = None
+                for heading_tag in ['h1', 'h2', 'h3', 'h4']:
+                    # Look for previous heading
+                    prev_heading = element.find_previous(heading_tag)
+                    if prev_heading:
+                        heading = prev_heading.get_text().strip()
+                        break
+                
+                if heading:
+                    location += f" under '{heading[:30]}...'" if len(heading) > 30 else f" under '{heading}'"
+                
+                return location
+    
+    # For more structured documents, try to determine section by tree traversal
+    all_elements = soup.find_all()
+    for i, element in enumerate(all_elements):
+        if text in element.get_text():
+            # Get a path-like description
+            parents = []
+            parent = element.parent
+            # Limit to 3 levels of parents to avoid overly long paths
+            for _ in range(3):
+                if parent and parent.name != '[document]':
+                    parent_id = parent.get('id', '')
+                    if parent_id:
+                        parents.append(f"{parent.name}#{parent_id}")
+                    else:
+                        parents.append(parent.name)
+                    parent = parent.parent
+                else:
+                    break
+            
+            path = ' > '.join(reversed(parents))
+            if path:
+                return f"{element.name} in {path}"
+            else:
+                return f"{element.name}#{i+1}"
     
     return "Unknown location"
 

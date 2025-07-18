@@ -14,6 +14,8 @@ import requests
 from typing import List, Dict, Any, Optional
 from urllib.parse import quote_plus
 from datetime import datetime
+from dotenv import load_dotenv
+from config_loader import get_api_key
 
 # Configure logging
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -40,8 +42,21 @@ class LLMResearchStrategy:
         
         Args:
             api_key: Optional API key for the LLM service
+            
+        Raises:
+            ValueError: If no API key is provided or found in environment
         """
-        self.api_key = api_key or os.environ.get('LLM_API_KEY')
+        # Load environment variables
+        load_dotenv()
+        
+        # Try to get the API key in order of precedence:
+        # 1. Explicitly provided api_key parameter
+        # 2. CLAUDE_API_KEY from environment (via config_loader)
+        # 3. LLM_API_KEY from environment (legacy)
+        self.api_key = api_key or get_api_key('CLAUDE_API_KEY') or os.environ.get('LLM_API_KEY')
+        
+        if not self.api_key:
+            raise ValueError("No LLM API key provided. Please set CLAUDE_API_KEY in your .env file.")
         
         # Load strategy templates
         self.strategy_templates_path = os.path.join(base_dir, 'config', 'strategy_templates.json')
