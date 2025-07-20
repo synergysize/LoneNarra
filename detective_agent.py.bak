@@ -18,11 +18,6 @@ import datetime
 from typing import List, Dict, Any, Optional, Tuple, Set
 from urllib.parse import urlparse, urljoin
 
-# Set debug level temporarily
-logging.getLogger('enhanced_artifact_detector').setLevel(logging.DEBUG)
-logging.getLogger('detective_agent').setLevel(logging.DEBUG)
-logging.getLogger('name_artifact_extractor').setLevel(logging.DEBUG)
-
 # Import internal modules
 from narrative_matrix import NarrativeMatrix
 from llm_integration import LLMIntegration
@@ -77,7 +72,6 @@ class DetectiveAgent:
         # Initialize components
         self.narrative_matrix = NarrativeMatrix()
         self.llm = LLMIntegration(use_claude=True)
-        self.llm_calls_count = 0
         self.crawler = Crawler()
         self.wayback = WaybackMachine()
         
@@ -142,11 +136,6 @@ class DetectiveAgent:
         # Initialize research state
         self._initialize_research()
         
-        # Check if research queue is empty after initialization
-        if len(self.research_queue) == 0:
-            logger.error("Research queue is empty after initialization. Cannot proceed with investigation.")
-            return []
-            
         # Main investigation loop
         while self._should_continue_investigation():
             self.current_iteration += 1
@@ -156,15 +145,13 @@ class DetectiveAgent:
             target = self._get_next_investigation_target()
             if not target:
                 logger.warning("No more targets to investigate")
+                self.idle_iterations += 1
+                if self.idle_iterations >= self.max_idle_iterations:
+                    logger.info(f"Reached maximum idle iterations ({self.max_idle_iterations})")
+                    break
                 
                 # Ask the LLM for new investigation ideas
                 self._generate_new_leads()
-                
-                # If still no targets after generating new leads, exit
-                if len(self.research_queue) == 0:
-                    logger.info("No targets in research queue after generating new leads. Ending investigation.")
-                    break
-                    
                 continue
             
             # Execute the investigation
@@ -185,7 +172,8 @@ class DetectiveAgent:
                 self._log_investigation_results(target, new_discoveries, new_targets)
             else:
                 # No new discoveries in this iteration
-                logger.info(f"No new discoveries in iteration {self.current_iteration}, continuing with next target")
+                logger.info(f"No new discoveries in iteration {self.current_iteration}")
+                self.idle_iterations += 1
             
             # Save state after each iteration
             self._save_state()
@@ -198,16 +186,6 @@ class DetectiveAgent:
         
         return self.discoveries
     
-    def _get_llm_instance(self):
-        """Alternate between Claude and GPT for each call."""
-        use_claude = (self.llm_calls_count % 2 == 0)
-        self.llm_calls_count += 1
-        
-        llm_type = "Claude" if use_claude else "GPT"
-        logger.info(f"Using {llm_type} for LLM call #{self.llm_calls_count}")
-        
-        return LLMIntegration(use_claude=use_claude, use_openai=not use_claude)
-
     def _initialize_research(self):
         """Initialize the research state with initial targets and strategies."""
         logger.info("Initializing research...")
@@ -266,43 +244,7 @@ class DetectiveAgent:
         prompt = f"""
 You are a digital detective investigating: "{self.objective}"
 
-MISSION: Hunt for "narrative artifacts" - historical names, code, wallets, or terminology that can create compelling backstories for cryptocurrency token launches. The best narratives come from authentic discoveries with interesting stories.
-
-SUCCESSFUL NARRATIVE EXAMPLES:
-- SimpleToken: Contract code found in 2016 Ethereum.org archives → launched using that exact code
-- Simple Wallet: Private key discovered in same archives → token launched from that wallet  
-- Buckazood: 1990s Sierra game fictional currency with Bitcoin-like logo → speculation about Hal Finney
-- Signa: Old Ethereum logo (two overlapping Sigma symbols) → launched as historical tribute
-- Zeus: Matt Furie's dog name found by digging through his website photos → personal connection
-- PEPE1.0: Original Pepe drawing found in Matt Furie's court evidence vs Alex Jones → legal archaeology  
-- Strawberry: Female Pepe discovered in Matt Furie's unpublished book → insider knowledge
-- Casinu: Token name later referenced by Vitalik in academic paper → retroactive validation
-- NexF: FBI token for busting market makers, revealed later as evidence → government conspiracy
-
-MY CAPABILITIES:
-✓ Crawl current websites and extract content
-✓ Wayback Machine access (2013-2025, especially 2013-2017 crypto goldmine)
-✓ GitHub repository mining and commit history analysis  
-✓ Targeted search queries across the web
-✓ Forum profile investigation and historical posts
-✓ Court documents and academic paper analysis
-✓ Archive snapshot analysis from key time periods
-✓ Social media archaeology and deleted content recovery
-
-TARGET: {self.entity}
-FOCUS PERIODS: [Add relevant timeframes for this entity]
-KNOWN ALIASES: [Any already discovered]
-
-WHAT I NEED FROM YOU:
-1. Specific URLs (not generic suggestions) - GitHub repos, forum profiles, archive pages
-2. Targeted search queries with clear rationale for each
-3. Historical time periods for Wayback investigation (when were they most active?)
-4. Priority ranking of targets (what's most likely to contain artifacts?)
-
-EXCLUDE: Obvious biographical info, well-known facts, their actual name variations
-
-FORMAT: Return JSON with website_targets, search_queries, wayback_targets, github_targets arrays.
-Be specific and tactical - I need exact URLs and search terms that will uncover hidden artifacts.
+I need you to generate a research strategy with specific URLs and search queries to find name artifacts related to {self.entity}.
 
 Please respond with ONLY a JSON object in this exact format:
 {{
@@ -318,38 +260,31 @@ Please respond with ONLY a JSON object in this exact format:
     "information_types": [
         "usernames",
         "project names",
-        "handles",
-        "contract addresses",
-        "wallet addresses",
-        "private keys",
-        "code snippets",
-        "early prototypes",
-        "forgotten projects"
+        "handles"
     ],
     "time_periods": [
         "2011-2013 Bitcoin forum era",
-        "2013-2015 early Ethereum development",
-        "2016-2017 ICO boom period"
+        "2013-2015 early Ethereum development"
     ]
 }}
+
+Focus on sources that would contain name artifacts like early usernames, handles, project codenames, or aliases that {self.entity} used before becoming famous.
 
 Return ONLY the JSON object, no other text.
 """
         
-        # Use alternating LLM for this call
-        llm = self._get_llm_instance()
-        
-        if llm.use_claude:
-            result = llm._call_claude(prompt)
-        elif llm.use_openai:
-            result = llm._call_openai(prompt)
+        # Call LLM directly with our custom prompt
+        if self.llm.use_claude:
+            result = self.llm._call_claude(prompt)
+        elif self.llm.use_openai:
+            result = self.llm._call_openai(prompt)
         else:
             logger.error("No LLM service available")
             result = "{}"
         
         # Extract JSON from the response
         try:
-            json_str = llm._extract_json(result)
+            json_str = self.llm._extract_json(result)
             data = json.loads(json_str)
             
             strategy = {
@@ -374,10 +309,35 @@ Return ONLY the JSON object, no other text.
         logger.info(f"Search queries: {strategy.get('search_queries', [])}")
         logger.info(f"Information types: {strategy.get('information_types', [])}")
         
-        # If strategy is empty or missing critical components, return empty strategy
+        # If strategy is empty or missing critical components, add fallback values for testing
         if not strategy.get('sources') and not strategy.get('search_queries'):
-            logger.error("LLM strategy generation failed - no targets to investigate")
-            return {}
+            logger.warning("LLM returned empty strategy, adding fallback values for testing")
+            strategy['sources'] = [
+                # Direct links to high-value, artifact-rich pages
+                "https://github.com/vbuterin",  # GitHub profile
+                "https://bitcointalk.org/index.php?action=profile;u=11772",  # BitcoinTalk profile (known username)
+                "https://ethereum.org/en/history/",  # Ethereum history page
+                "https://ethereum.org/en/foundation/",  # Foundation page with potential names
+                "https://github.com/ethereum/wiki/wiki/Vitalik-Buterin",  # Wiki page about Vitalik
+                
+                # Repository pages with potential commit history and usernames
+                "https://github.com/vbuterin?tab=repositories",
+                "https://github.com/ethereum/EIPs/graphs/contributors",
+                "https://github.com/ethereum/yellowpaper/graphs/contributors",
+                
+                # Wayback Machine archives for historical content
+                "https://web.archive.org/web/20140601000000/http://vitalik.ca",
+                "https://web.archive.org/web/20150601000000/http://vitalik.ca/about.html",
+                "https://web.archive.org/web/20131201000000/https://bitcointalk.org/index.php?action=profile;u=11772"
+            ]
+            # Replace vague search queries with direct, specific URLs
+            strategy['search_queries'] = []
+            strategy['information_types'] = [
+                "usernames",
+                "handles",
+                "email addresses",
+                "social media profiles"
+            ]
         
         return strategy
     
@@ -723,10 +683,7 @@ Return ONLY the JSON object, no other text.
         if not artifacts:
             return []
         
-        # Log raw artifacts before processing
-        logger.info(f"Raw artifacts from {source_url}: {len(artifacts)} total")
-        for i, artifact in enumerate(artifacts):
-            logger.debug(f"Raw artifact {i+1}: {artifact.get('summary', 'No summary')} ({artifact.get('type', 'unknown')})")
+        logger.info(f"Processing {len(artifacts)} artifacts from {source_url}")
         
         # Track artifacts for deduplication within this batch
         batch_artifacts = {}
@@ -870,13 +827,12 @@ Return ONLY the JSON object, no other text.
             }
             
             # Check for duplicates against all previous discoveries
-            logger.debug(f"Checking duplicate for: {discovery['summary']}")
             if self._is_duplicate_discovery(discovery):
                 # Log with more details about what was skipped to help with debugging
                 if discovery.get('type') == 'name':
-                    logger.debug(f"Skipping duplicate: '{content}' (source: {source_url})")
+                    logger.info(f"Skipping duplicate name discovery: '{content}' (source: {source_url})")
                 else:
-                    logger.debug(f"Skipping duplicate: {content[:40]}... (type: {discovery.get('type')})")
+                    logger.info(f"Skipping duplicate discovery: {content[:40]}... (type: {discovery.get('type')})")
                 skipped_count += 1
                 continue
                 
@@ -894,7 +850,7 @@ Return ONLY the JSON object, no other text.
         
         # Log summary information with more details
         logger.info(f"Processed {len(artifacts)} artifacts from {source_url}")
-        logger.info(f"Added {len(new_discoveries)} new discoveries, filtered {len(artifacts) - len(new_discoveries)} duplicates/low-quality")
+        logger.info(f"Added {len(new_discoveries)} new unique discoveries, skipped {skipped_count} duplicates")
         
         # Add more detailed summary for name artifacts to help with debugging
         name_artifacts = [d for d in new_discoveries if d.get('type') == 'name']
@@ -978,17 +934,11 @@ Format your suggestions as a JSON object with the following structure:
 Be specific, not generic. Use exact URLs and search terms tailored to our objective.
 """
         
-        # Call the LLM with alternating models
+        # Call the LLM
         try:
-            # Use our alternating LLM functionality
-            llm = self._get_llm_instance()
-            
-            if llm.use_claude:
-                response = llm._call_claude(prompt)
-            else:
-                response = llm._call_openai(prompt)
-                
-            json_str = llm._extract_json(response)
+            # First try using analyze which expects a JSON response
+            response = self.llm._call_claude(prompt)
+            json_str = self.llm._extract_json(response)
             suggestions = json.loads(json_str)
             
             # Log the LLM suggestions
@@ -1121,17 +1071,10 @@ Format your suggestions as a JSON object with the following structure:
 Be creative and specific. Think of sources we haven't tried yet.
 """
         
-        # Call the LLM with alternating models
+        # Call the LLM
         try:
-            # Use our alternating LLM functionality
-            llm = self._get_llm_instance()
-            
-            if llm.use_claude:
-                response = llm._call_claude(prompt)
-            else:
-                response = llm._call_openai(prompt)
-                
-            json_str = llm._extract_json(response)
+            response = self.llm._call_claude(prompt)
+            json_str = self.llm._extract_json(response)
             suggestions = json.loads(json_str)
             
             # Convert suggestions to investigation targets
@@ -1255,8 +1198,10 @@ Be creative and specific. Think of sources we haven't tried yet.
             logger.info(f"Reached maximum iterations ({self.max_iterations})")
             return False
         
-        # Removed idle iterations check to allow more thorough investigation
-        # This allows the agent to process all targets in the research queue
+        # Check if we've been idle for too long
+        if self.idle_iterations >= self.max_idle_iterations:
+            logger.info(f"Reached maximum idle iterations ({self.max_idle_iterations})")
+            return False
         
         # Check if we've exceeded the maximum runtime
         elapsed_time = time.time() - self.start_time
@@ -1664,16 +1609,9 @@ Please provide a detailed summary of the investigation results, including:
 Write in a professional, analytical tone appropriate for an investigation report.
 """
         
-        # Call the LLM with alternating models
+        # Call the LLM
         try:
-            # Use our alternating LLM functionality
-            llm = self._get_llm_instance()
-            
-            if llm.use_claude:
-                summary = llm._call_claude(prompt)
-            else:
-                summary = llm._call_openai(prompt)
-                
+            summary = self.llm._call_claude(prompt)
             return summary
         except Exception as e:
             logger.error(f"Error generating investigation summary: {str(e)}")

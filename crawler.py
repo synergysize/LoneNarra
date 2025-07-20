@@ -31,7 +31,7 @@ logger = logging.getLogger('crawler')
 from fetch import fetch_page
 from crawl import extract_links, is_allowed_by_robots
 from url_queue import URLQueue
-from artifact_extractor import extract_artifacts_from_html
+from enhanced_artifact_detector import EnhancedArtifactDetector
 
 class Crawler:
     """
@@ -154,9 +154,16 @@ class Crawler:
             content_preview = html_content[:500] + "..." if len(html_content) > 500 else html_content
             logger.debug(f"Content preview from {url}: {content_preview}")
             
-            # Extract artifacts
+            # Extract artifacts using the enhanced detector
             logger.info(f"Extracting artifacts from {url}")
-            artifacts = extract_artifacts_from_html(html_content, url=url, date=fetch_info.get("date"))
+            # Initialize the detector once
+            detector = EnhancedArtifactDetector()
+            artifacts = detector.extract_artifacts(
+                html_content, 
+                url=url, 
+                date=fetch_info.get("date"),
+                objective=self.config.get("objective", "")
+            )
             
             self.stats["artifacts_found"] += len(artifacts)
             high_scoring = len([a for a in artifacts if a.get("score", 0) > 0.7])

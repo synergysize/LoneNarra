@@ -99,31 +99,70 @@ class EnhancedArtifactDetector:
         Returns:
             List of artifact dictionaries
         """
-        # Create a name extractor instance
+        # Create a name extractor instance with target entity for auto-exclusion
         name_extractor = NameArtifactExtractor(entity=entity)
         
         # Extract artifacts
         artifacts = name_extractor.extract_from_html(html_content, url=url, date=date)
         
+        # Unique artifacts set for deduplication
+        unique_names = set()
+        
         # Convert to standard format
         standardized_artifacts = []
+        
         for artifact in artifacts:
+            name = artifact.get("name", "")
+            name_lower = name.lower()
+            
+            # Skip if no name or if it's too short
+            if not name or len(name) < 2:
+                continue
+                
+            # Skip duplicates
+            if name_lower in unique_names:
+                logger.debug(f"Skipping duplicate name artifact: {name}")
+                continue
+                
+            # Skip if name is just the entity or part of entity name
+            if entity and (name_lower == entity.lower() or entity.lower().startswith(name_lower + " ")):
+                logger.debug(f"Skipping entity name artifact: {name}")
+                continue
+            
+            # Add to unique set
+            unique_names.add(name_lower)
+            
+            # Generate a simple hash for the artifact based on name and source
+            artifact_hash = str(hash(f"{name_lower}_{url}"))
+            
+            # Adjust score - ensure valuable artifacts are scored higher
+            score = artifact.get("score", 0.5)
+            
+            # Boost score for likely valuable artifacts
+            if artifact.get("subtype") == "username" and re.match(r'^[a-zA-Z0-9_-]+$', name):
+                score = min(1.0, score + 0.1)  # Usernames are valuable
+                
+            # Standardize the artifact
             standardized = {
                 "type": "name",
                 "subtype": artifact.get("subtype", "unknown"),
-                "content": artifact.get("context", ""),
-                "summary": f"Name artifact: {artifact.get('name', '')} ({artifact.get('subtype', 'unknown')})",
+                "content": name,
+                "summary": f"Name artifact: {name} ({artifact.get('subtype', 'unknown')})",
                 "location": "HTML content",
-                "hash": "",  # Would normally generate a hash
-                "score": artifact.get("score", 0.5),
+                "hash": artifact_hash,
+                "score": score,
                 "url": url,
                 "date": date,
                 "entity": entity,
-                "name": artifact.get("name", "")
+                "name": name
             }
             standardized_artifacts.append(standardized)
         
-        return standardized_artifacts
+        # Log summary
+        logger.info(f"Extracted {len(standardized_artifacts)} unique name artifacts from URL: {url}")
+        
+        # Sort by score (descending) and return
+        return sorted(standardized_artifacts, key=lambda x: x.get("score", 0), reverse=True)
     
     def extract_artifacts(self, html_content: str, url: str, date: Optional[str] = None, 
                          objective: Optional[str] = None, entity: Optional[str] = None) -> List[Dict[str, Any]]:

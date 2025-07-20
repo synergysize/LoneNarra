@@ -17,7 +17,7 @@ from urllib.parse import urlparse
 from url_queue import URLQueue
 from fetch import fetch_page
 from crawl import extract_links, is_allowed_by_robots
-from artifact_extractor import extract_artifacts_from_html
+from enhanced_artifact_detector import EnhancedArtifactDetector
 
 # Set up logging
 base_dir = '/home/computeruse/.anthropic/narrahunt_phase2'
@@ -148,11 +148,13 @@ def run_crawler(test_mode=False):
                 stats["pages_fetched"] += 1
                 logger.info(f"Successfully fetched {url}")
                 
-                # Extract artifacts
-                artifacts = extract_artifacts_from_html(
+                # Extract artifacts using enhanced detector
+                detector = EnhancedArtifactDetector()
+                artifacts = detector.extract_artifacts(
                     html_content, 
                     url=url, 
-                    date=fetch_info.get("date")
+                    date=fetch_info.get("date"),
+                    objective=args.objective if hasattr(args, 'objective') else "Find artifacts"
                 )
                 
                 stats["artifacts_found"] += len(artifacts)
